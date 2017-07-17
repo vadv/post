@@ -1,0 +1,10 @@
+bin
+pkg
+assets
+rpm-tmp.*
+*.exe
+*.rpm
+*.idea
+rpm/BUILD/*
+rpm/SOURCES/*
+
