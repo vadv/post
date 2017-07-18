@@ -8,7 +8,7 @@ api умеет сохранять и выгружать данные в pg, ngin
 # Деплой
 
 ```
-$ sudo yum install postgresql96-server postgresql96-contrib
+$ sudo yum install postgresql96-server postgresql96-contrib postgresql96-plpython
 $ psql -c 'create database data'
 $ post -run-migrate -connection-string "postgresql://127.0.0.1/data"
 $ sudo yum install nginx -y
