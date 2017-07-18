@@ -90,6 +90,7 @@ server {
 
   * создать файл:  `POST /relative/path/to/file/name`
   * получить файл: `GET  /relative/path/to/file/name`
+  * получить статус:  `HEAD /relative/path/to/file/name`
 
 удаления нет - так как это запрещенная операция по выбиванию ключа.
 
