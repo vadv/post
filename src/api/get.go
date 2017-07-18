@@ -1,4 +1,4 @@
-package storage
+package api
 
 import (
 	"io/ioutil"
@@ -13,7 +13,7 @@ import (
 
 // получаем key, выгружаем из db в workdir,
 // открываем файл, читаем его в память, отдаем клиенту
-func (s *storage) Get(rw http.ResponseWriter, req *http.Request) {
+func (s *api) Get(rw http.ResponseWriter, req *http.Request) {
 
 	relationPath := req.URL.Path
 	if req.URL.RawQuery != "" {

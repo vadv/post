@@ -1,4 +1,4 @@
-package storage
+package api
 
 import (
 	"io/ioutil"
@@ -12,7 +12,7 @@ import (
 )
 
 // читаем содержимое body, пишем его в файл, находящийся в workdir, загружаем его в db
-func (s *storage) Post(rw http.ResponseWriter, req *http.Request) {
+func (s *api) Post(rw http.ResponseWriter, req *http.Request) {
 
 	relationPath := req.URL.Path
 	if req.URL.RawQuery != "" {

@@ -1,3 +1,15 @@
+# схема
+
+Приложение состоит из pg, api и nginx.
+(pg <-> api <-> nginx) <-> client
+
+api умеет сохранять и выгружать данные в pg, nginx работает в режиме proxy_store для минимизации общения с api.
+
+# деплой
+
+`post -run-migrate -connection-string "postgresql://127.0.0.1/data?user=data"`
+`post -workdir /var/tmp/tmpfs -connection-string "postgresql://127.0.0.1/data?user=data"`
+
 # nginx для конечного пользователя
 
 Пример использования:

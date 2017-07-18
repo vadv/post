@@ -1,4 +1,4 @@
-package storage
+package api
 
 import (
 	"database/sql"
@@ -10,7 +10,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type storage struct {
+type api struct {
 	sync.Mutex
 	workDir    string
 	connString string
@@ -28,8 +28,8 @@ func openDb(connString string) (*sql.DB, error) {
 	return db, nil
 }
 
-func New(workDir, connString string) (*storage, error) {
-	result := &storage{workDir: workDir, connString: connString}
+func New(workDir, connString string) (*api, error) {
+	result := &api{workDir: workDir, connString: connString}
 	db, err := openDb(result.connString)
 	if err != nil {
 		return nil, err
@@ -39,7 +39,7 @@ func New(workDir, connString string) (*storage, error) {
 	return result, nil
 }
 
-func (s *storage) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+func (s *api) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 
 	// ставим здесь запрет на params, так как мы хотим использовать nginx proxy_store
 	// если мы хотим использовать версии, то в дальнейшем можно снять запрет но перейти на nginx proxy_cache
@@ -60,13 +60,13 @@ func (s *storage) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func (s *storage) getDB() *sql.DB {
+func (s *api) getDB() *sql.DB {
 	s.Lock()
 	defer s.Unlock()
 	return s.db
 }
 
-func (s *storage) dbPinger() {
+func (s *api) dbPinger() {
 	ticker := time.NewTicker(time.Minute)
 	for {
 		select {

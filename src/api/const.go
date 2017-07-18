@@ -1,4 +1,4 @@
-package storage
+package api
 
 const (
 	UPLOADED_FILE_PREFIX = `.tmp`

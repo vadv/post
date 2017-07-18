@@ -1,18 +1,20 @@
 package main
 
 import (
+	"api"
 	"flag"
 	"fmt"
 	"log"
+	"migrate"
 	"net/http"
 	"os"
-	"storage"
 )
 
 var (
 	listenAddress   = flag.String("listen-address", "127.0.0.1:8080", "bind address for http-api")
 	connectionInfo  = flag.String("connection-string", "postgresql://127.0.0.1/storage?user=storage&password=storage&sslmode=disable", "postgres connection info")
 	workDir         = flag.String("workdir", "/tmp", "path to disk temporary directory")
+	runMigrateOnly  = flag.Bool("run-migrate", false, "run migrate scripts and exit")
 	showVersionOnly = flag.Bool("v", false, "prints current version")
 	BuildVersion    = `UNKNOWN`
 )
@@ -28,9 +30,20 @@ func main() {
 		os.Exit(1)
 	}
 
-	st, err := storage.New(*workDir, *connectionInfo)
+	if *runMigrateOnly {
+		log.Printf("[INFO] migrate starting\n")
+		if err := migrate.Run(*connectionInfo); err != nil {
+			log.Printf("[ERROR] run migrate: %s\n", err.Error())
+			os.Exit(7)
+		} else {
+			log.Printf("[INFO] migrate completed successfully\n")
+			os.Exit(0)
+		}
+	}
+
+	st, err := api.New(*workDir, *connectionInfo)
 	if err != nil {
-		log.Printf("[FATAL] open storage: %s\n", err.Error())
+		log.Printf("[FATAL] create api: %s\n", err.Error())
 		os.Exit(2)
 	}
 
