@@ -36,7 +36,7 @@ $ curl -s 127.0.0.1/images/ololo/file.jpg -s -o /dev/null -w "%{http_code}"
 200
 
 на неизвестный файл будет ответ 404
-$curl -s "127.0.0.1/images/ololo/file_1.jpg" -s -o /dev/null -w "%{http_code}"
+$curl -s 127.0.0.1/images/ololo/file1.jpg -s -o /dev/null -w "%{http_code}"
 404
 
 nginx игнорирует параметры
@@ -44,7 +44,7 @@ $ curl -s "127.0.0.1/images/ololo/file.jpg?version=12" -s -o /dev/null -w "%{htt
 200
 ```
 
-при этом в базе оно записалось 1 раз и сразу закэшировалось nginx'ом
+при этом в базе оно записалось 1 раз и закэшировалось nginx'ом после первого реквеста
 ```
 2017/07/18 03:45:19 [INFO] POST /images/ololo/file.jpg 0.570350505s completed
 ```
