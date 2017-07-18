@@ -37,7 +37,7 @@ $ curl -s 127.0.0.1/images/ololo/file.jpg -s -o /dev/null -w "%{http_code}"
 
 проверяем, существует ли файл
 $ curl --head -s 127.0.0.1/images/ololo/file.jpg -w "%{http_code}"
-200
+204
 
 проверяем, существует ли файл
 $ curl --head -s 127.0.0.1/images/ololo/file1.jpg -w "%{http_code}"

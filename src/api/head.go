@@ -41,7 +41,7 @@ func (s *api) Head(rw http.ResponseWriter, req *http.Request) {
 			return
 		}
 		if exists {
-			rw.WriteHeader(http.StatusOK)
+			rw.WriteHeader(http.StatusNoContent)
 		} else {
 			rw.WriteHeader(http.StatusNotFound)
 		}
