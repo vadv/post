@@ -19,7 +19,7 @@ $ post -workdir /var/tmp/tmpfs -connection-string "postgresql://127.0.0.1/data?u
 
 Пример использования:
 ```
-
+загрузка файла
 $ curl -X POST 127.0.0.1/images/ololo/file.jpg --data-binary @/tmp/big_file_2 -s -o /dev/null -w "%{http_code}"
 201
 
@@ -36,11 +36,11 @@ $ curl -s 127.0.0.1/images/ololo/file.jpg -s -o /dev/null -w "%{http_code}"
 200
 
 проверяем, существует ли файл
-$ curl -s 127.0.0.1/images/ololo/file.jpg --head -w "%{http_code}"
+$ curl --head -s 127.0.0.1/images/ololo/file.jpg -w "%{http_code}"
 200
 
 проверяем, существует ли файл
-$ curl -s 127.0.0.1/images/ololo/file1.jpg --head -w "%{http_code}"
+$ curl --head -s 127.0.0.1/images/ololo/file1.jpg -w "%{http_code}"
 404
 
 на неизвестный файл будет ответ 404
