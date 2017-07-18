@@ -7,6 +7,8 @@ api умеет сохранять и выгружать данные в pg, ngin
 
 # деплой
 
+`sudo yum install postgresql96-server postgresql96-contrib`
+`psql -c 'create database data'`
 `post -run-migrate -connection-string "postgresql://127.0.0.1/data?user=data"`
 `post -workdir /var/tmp/tmpfs -connection-string "postgresql://127.0.0.1/data?user=data"`
 
