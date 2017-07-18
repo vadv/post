@@ -44,7 +44,7 @@ func (s *api) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	// ставим здесь запрет на params, так как мы хотим использовать nginx proxy_store
 	// если мы хотим использовать версии, то в дальнейшем можно снять запрет но перейти на nginx proxy_cache
 	if req.URL.RawQuery != "" {
-		log.Printf("[ERROR] decline %s: params not empty\n", req.URL.String())
+		log.Printf("[ERROR] %s decline %s: params not empty\n", req.Method, req.URL.String())
 		rw.WriteHeader(http.StatusNotAcceptable)
 		return
 	}
@@ -54,6 +54,8 @@ func (s *api) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		s.Get(rw, req)
 	case req.Method == "POST":
 		s.Post(rw, req)
+	case req.Method == "HEAD":
+		s.Head(rw, req)
 	default:
 		log.Printf("[ERROR] unknown verb: %s\n", req.Method)
 		rw.WriteHeader(http.StatusNotAcceptable)

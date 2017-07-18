@@ -23,9 +23,9 @@ $ post -workdir /var/tmp/tmpfs -connection-string "postgresql://127.0.0.1/data?u
 $ curl -X POST 127.0.0.1/images/ololo/file.jpg --data-binary @/tmp/big_file_2 -s -o /dev/null -w "%{http_code}"
 201
 
-на повторный реквест nginx ответит 405
+на повторный реквест
 $ curl -X POST 127.0.0.1/images/ololo/file.jpg --data-binary @/tmp/big_file_2 -s -o /dev/null -w "%{http_code}"
-405
+409
 
 ответ идет от апстрима, пишем ответ в proxy_cache
 $ curl -s 127.0.0.1/images/ololo/file.jpg -s -o /dev/null -w "%{http_code}"
@@ -35,13 +35,21 @@ $ curl -s 127.0.0.1/images/ololo/file.jpg -s -o /dev/null -w "%{http_code}"
 $ curl -s 127.0.0.1/images/ololo/file.jpg -s -o /dev/null -w "%{http_code}"
 200
 
+проверяем, существует ли файл
+$ curl -s 127.0.0.1/images/ololo/file.jpg --head -w "%{http_code}"
+200
+
+проверяем, существует ли файл
+$ curl -s 127.0.0.1/images/ololo/file1.jpg --head -w "%{http_code}"
+404
+
 на неизвестный файл будет ответ 404
 $curl -s 127.0.0.1/images/ololo/file1.jpg -s -o /dev/null -w "%{http_code}"
 404
 
-nginx игнорирует параметры
+не игнорируем параметры
 $ curl -s "127.0.0.1/images/ololo/file.jpg?version=12" -s -o /dev/null -w "%{http_code}"
-200
+406
 ```
 
 при этом в базе оно записалось 1 раз и закэшировалось nginx'ом после первого реквеста
@@ -65,7 +73,7 @@ server {
   root /var/www;
 
   location /images/ {
-    try_files $uri @fetch;
+    try_files $uri?$args @fetch;
   }
 
   location @fetch {
