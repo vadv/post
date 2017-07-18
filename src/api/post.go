@@ -1,7 +1,7 @@
 package api
 
 import (
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -33,10 +33,8 @@ func (s *api) Post(rw http.ResponseWriter, req *http.Request) {
 	defer fd.Close()
 	defer os.Remove(tmpPath)
 
-	// читаем тело в память, так как им же нам для nginx нужно ответить 200 чтобы он сразу закэшировал
-	// можно ответить 201, тогда он кэшировать не будет
-	content, errRead := ioutil.ReadAll(req.Body)
-	if errRead != nil || ioutil.WriteFile(tmpPath, content, 0777) != nil {
+	// записываем ответ в файл
+	if _, err := io.Copy(fd, req.Body); err != nil {
 		log.Printf("[ERROR] POST write file: %s", err.Error())
 		rw.Header()[ERROR_HEADER] = []string{ERROR_CODE_WRITE}
 		rw.WriteHeader(http.StatusInternalServerError)
@@ -66,8 +64,6 @@ func (s *api) Post(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// nginx proxy_store в ответ на 200 закэширует ответ
-	rw.Write(content)
-	//rw.WriteHeader(http.StatusCreated)
+	rw.WriteHeader(http.StatusCreated)
 	log.Printf("[INFO] POST %s %s completed\n", relationPath, time.Now().Sub(beginAt))
 }

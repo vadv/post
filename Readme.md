@@ -19,15 +19,19 @@ $ post -workdir /var/tmp/tmpfs -connection-string "postgresql://127.0.0.1/data?u
 
 Пример использования:
 ```
-мы отвечаем 200 чтобы nginx сразу закэшировал файл
+
 $ curl -X POST 127.0.0.1/images/ololo/file.jpg --data-binary @/tmp/big_file_2 -s -o /dev/null -w "%{http_code}"
-200
+201
 
 на повторный реквест nginx ответит 405
 $ curl -X POST 127.0.0.1/images/ololo/file.jpg --data-binary @/tmp/big_file_2 -s -o /dev/null -w "%{http_code}"
 405
 
-ответ идет от nginx
+ответ идет от апстрима, пишем ответ в proxy_cache
+$ curl -s 127.0.0.1/images/ololo/file.jpg -s -o /dev/null -w "%{http_code}"
+200
+
+ответ идет от nginx из proxy_cache
 $ curl -s 127.0.0.1/images/ololo/file.jpg -s -o /dev/null -w "%{http_code}"
 200
 
