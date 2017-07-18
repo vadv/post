@@ -1,18 +1,21 @@
-# схема
+# Схема
 
 Приложение состоит из pg, api и nginx.
 (pg <-> api <-> nginx) <-> client
 
-api умеет сохранять и выгружать данные в pg, nginx работает в режиме proxy_store для минимизации общения с api.
+api умеет сохранять и выгружать данные в pg, nginx работает в режиме proxy_store для минимизации общения с pg.
 
-# деплой
+# Деплой
 
-`sudo yum install postgresql96-server postgresql96-contrib`
-`psql -c 'create database data'`
-`post -run-migrate -connection-string "postgresql://127.0.0.1/data?user=data"`
-`post -workdir /var/tmp/tmpfs -connection-string "postgresql://127.0.0.1/data?user=data"`
+```
+$ sudo yum install postgresql96-server postgresql96-contrib
+$ psql -c 'create database data'
+$ post -run-migrate -connection-string "postgresql://127.0.0.1/data"
+$ sudo yum install nginx -y
+$ post -workdir /var/tmp/tmpfs -connection-string "postgresql://127.0.0.1/data?user=data"
+```
 
-# nginx для конечного пользователя
+# ENTERPOINT для конечного пользователя
 
 Пример использования:
 ```
@@ -42,7 +45,7 @@ $ curl -s "127.0.0.1/images/ololo/file.jpg?version=12" -s -o /dev/null -w "%{htt
 2017/07/18 03:45:19 [INFO] POST /images/ololo/file.jpg 0.570350505s completed
 ```
 
-Конфиг nginx:
+Примерный конфиг nginx:
 
 ```
 upstream post_upstream {
@@ -71,7 +74,7 @@ server {
 }
 ```
 
-# http-демон
+# API
 
 Со стороны http у демона есть директория workdir (желаетельно tmpfs):
   * это место где храняться выгруженые по запросу файлы
@@ -83,7 +86,7 @@ api:
 
 удаления нет - так как это запрещенная операция по выбиванию ключа.
 
-# SQL-бакэнд
+# SQL
 
 Со стороны SQL была задача предоставить простой интерфейс к стораджу:
   * сохраняем в базу: `select IMPORT('key', '/path/to/exists_file')`
